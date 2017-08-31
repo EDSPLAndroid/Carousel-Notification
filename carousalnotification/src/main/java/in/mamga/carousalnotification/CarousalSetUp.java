@@ -30,7 +30,6 @@ public class CarousalSetUp implements Parcelable {
     public String largeIcon;
     public String caraousalPlaceholder;
     public CarousalItem leftItem;
-    public CarousalItem rightItem;
     public boolean isOtherRegionClickable = false;
     public boolean isImagesInCarousal = true;
 
@@ -41,8 +40,7 @@ public class CarousalSetUp implements Parcelable {
     public CarousalSetUp (ArrayList<CarousalItem> carousalItems, String contentTitle, String contentText,
                           String bigContentTitle, String bigContentText, int carousalNotificationId,
                           int currentStartIndex,String smallIcon, int smallIconResourceId,
-                          String largeIcon, String caraousalPlaceholder, CarousalItem leftItem,
-                          CarousalItem rightItem, boolean isOtherRegionClickable, boolean isImagesInCarousal) {
+                          String largeIcon, String caraousalPlaceholder, CarousalItem leftItem, boolean isOtherRegionClickable, boolean isImagesInCarousal) {
         this.carousalItems = carousalItems;
         this.contentTitle = contentTitle;
         this.contentText = contentText;
@@ -55,7 +53,6 @@ public class CarousalSetUp implements Parcelable {
         this.largeIcon = largeIcon;
         this.caraousalPlaceholder = caraousalPlaceholder;
         this.leftItem = leftItem;
-        this.rightItem = rightItem;
         this.isOtherRegionClickable = isOtherRegionClickable;
         this.isImagesInCarousal = isImagesInCarousal;
     }
@@ -81,7 +78,6 @@ public class CarousalSetUp implements Parcelable {
         largeIcon = in.readString();
         caraousalPlaceholder = in.readString();
         leftItem = (CarousalItem) in.readValue(CarousalItem.class.getClassLoader());
-        rightItem = (CarousalItem) in.readValue(CarousalItem.class.getClassLoader());
         isOtherRegionClickable = in.readByte() != 0x00;
         isImagesInCarousal = in.readByte() != 0x00;
     }
@@ -111,7 +107,6 @@ public class CarousalSetUp implements Parcelable {
         dest.writeString(largeIcon);
         dest.writeString(caraousalPlaceholder);
         dest.writeValue(leftItem);
-        dest.writeValue(rightItem);
         dest.writeByte((byte) (isOtherRegionClickable ? 0x01 : 0x00));
         dest.writeByte((byte) (isImagesInCarousal ? 0x01 : 0x00));
     }

@@ -28,7 +28,6 @@ public class Carousal {
     private String contentTitle, contentText; //title and text while it is small
     private String bigContentTitle, bigContentText; //title and text when it becomes large
     private String leftItemTitle, leftItemDescription;
-    private String rightItemTitle, rightItemDescription;
     public static final String TAG = "Carousal";
     private NotificationCompat.Builder mBuilder;
     private int carousalNotificationId = 9873715; //Random id for notification. Will cancel any
@@ -45,8 +44,8 @@ public class Carousal {
     static Bitmap largeIcon;
     static Bitmap caraousalPlaceholder;
 
-    private CarousalItem leftItem, rightItem;
-    private Bitmap leftItemBitmap, rightItemBitmap;
+    private CarousalItem leftItem;
+    private Bitmap leftItemBitmap;
 
     private CarousalSetUp carousalSetUp;
     private String smallIconPath, largeIconPath, placeHolderImagePath; //Stores path of these images if set by user
@@ -309,9 +308,9 @@ public class Carousal {
         currentStartIndex = 0;
         if (carousalItems != null && carousalItems.size() > 0) {
             if (carousalItems.size() == 1) {
-                prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex), null);
+                prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex));
             } else {
-                prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex), carousalItems.get(currentStartIndex + 1));
+                prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex));
             }
         }
 
@@ -322,27 +321,17 @@ public class Carousal {
      * All Item variables are set here. After this showCarousal is hit.
      *
      * @param leftItem
-     * @param rightItem
+     *
      */
-    private void prepareVariablesForCarousalAndShow(CarousalItem leftItem, CarousalItem rightItem) {
+    private void prepareVariablesForCarousalAndShow(CarousalItem leftItem) {
         if (this.leftItem == null) {
             this.leftItem = new CarousalItem();
-        }
-        if (this.rightItem == null) {
-            this.rightItem = new CarousalItem();
         }
         if (leftItem != null) {
             this.leftItem = leftItem;
             leftItemTitle = leftItem.getTitle();
             leftItemDescription = leftItem.getDescription();
             leftItemBitmap = getCarousalBitmap(leftItem);
-
-        }
-        if (rightItem != null) {
-            this.rightItem = rightItem;
-            rightItemTitle = rightItem.getTitle();
-            rightItemDescription = rightItem.getDescription();
-            rightItemBitmap = getCarousalBitmap(rightItem);
 
         }
         showCarousal();
@@ -362,7 +351,6 @@ public class Carousal {
             } else {
                 carousalSetUp.currentStartIndex = currentStartIndex;
                 carousalSetUp.leftItem = leftItem;
-                carousalSetUp.rightItem = rightItem;
             }
             //First set up all the icons
             setUpCarousalIcons();
@@ -438,18 +426,14 @@ public class Carousal {
      * @param bigView
      */
     private void setUpCarousalVisibilities(RemoteViews bigView) {
-        if (carousalItems.size() < 3) {
+        if (carousalItems.size() < 2) {
             bigView.setViewVisibility(R.id.ivArrowLeft, View.GONE);
             bigView.setViewVisibility(R.id.ivArrowRight, View.GONE);
         } else {
             bigView.setViewVisibility(R.id.ivArrowLeft, View.VISIBLE);
             bigView.setViewVisibility(R.id.ivArrowRight, View.VISIBLE);
         }
-        if (carousalItems.size() < 2) {
-            bigView.setViewVisibility(R.id.llRightItemLayout, View.GONE);
-        } else {
-            bigView.setViewVisibility(R.id.llRightItemLayout, View.VISIBLE);
-        }
+
         if (TextUtils.isEmpty(bigContentText)) {
             bigView.setViewVisibility(R.id.tvCarousalContent, View.GONE);
         } else {
@@ -470,24 +454,12 @@ public class Carousal {
         } else {
             bigView.setViewVisibility(R.id.tvLeftDescriptionText, View.VISIBLE);
         }
-        if (TextUtils.isEmpty(rightItemTitle)) {
-            bigView.setViewVisibility(R.id.tvRightTitleText, View.GONE);
-        } else {
-            bigView.setViewVisibility(R.id.tvRightTitleText, View.VISIBLE);
-        }
-        if (TextUtils.isEmpty(rightItemDescription)) {
-            bigView.setViewVisibility(R.id.tvRightDescriptionText, View.GONE);
-        } else {
-            bigView.setViewVisibility(R.id.tvRightDescriptionText, View.VISIBLE);
-        }
+
         if (!isImagesInCarousal) {
             bigView.setViewVisibility(R.id.ivImageLeft, View.GONE);
-            bigView.setViewVisibility(R.id.ivImageRight, View.GONE);
         } else {
             bigView.setViewVisibility(R.id.ivImageLeft, View.VISIBLE);
-            bigView.setViewVisibility(R.id.ivImageRight, View.VISIBLE);
         }
-
     }
 
     /**
@@ -541,14 +513,10 @@ public class Carousal {
         if (leftItemBitmap != null) {
             bigView.setImageViewBitmap(R.id.ivImageLeft, leftItemBitmap);
         }
-        if (rightItemBitmap != null) {
-            bigView.setImageViewBitmap(R.id.ivImageRight, rightItemBitmap);
-        }
+
         bigView.setImageViewBitmap(R.id.ivCarousalAppIcon, largeIcon);
         bigView.setTextViewText(R.id.tvCarousalTitle, bigContentTitle);
         bigView.setTextViewText(R.id.tvCarousalContent, bigContentText);
-        bigView.setTextViewText(R.id.tvRightTitleText, rightItemTitle);
-        bigView.setTextViewText(R.id.tvRightDescriptionText, rightItemDescription);
         bigView.setTextViewText(R.id.tvLeftTitleText, leftItemTitle);
         bigView.setTextViewText(R.id.tvLeftDescriptionText, leftItemDescription);
     }
@@ -563,9 +531,6 @@ public class Carousal {
         //left arrow
         PendingIntent leftArrowPendingIntent = getPendingIntent(CarousalConstants.EVENT_LEFT_ARROW_CLICKED);
         bigView.setOnClickPendingIntent(R.id.ivArrowLeft, leftArrowPendingIntent);
-        //right item
-        PendingIntent rightItemPendingIntent = getPendingIntent(CarousalConstants.EVENT_RIGHT_ITEM_CLICKED);
-        bigView.setOnClickPendingIntent(R.id.llRightItemLayout, rightItemPendingIntent);
         //left item
         PendingIntent leftItemPendingIntent = getPendingIntent(CarousalConstants.EVENT_LEFT_ITEM_CLICKED);
         bigView.setOnClickPendingIntent(R.id.llLeftItemLayout, leftItemPendingIntent);
@@ -598,7 +563,7 @@ public class Carousal {
         CarousalSetUp cr = new CarousalSetUp(carousalItems, contentTitle, contentText,
                 bigContentTitle, bigContentText, carousalNotificationId,
                 currentStartIndex, smallIconPath, smallIconResourceId, largeIconPath,
-                placeHolderImagePath, leftItem, rightItem, isOtherRegionClickable, isImagesInCarousal);
+                placeHolderImagePath, leftItem, isOtherRegionClickable, isImagesInCarousal);
         return cr;
     }
 
@@ -680,9 +645,6 @@ public class Carousal {
             case CarousalConstants.EVENT_LEFT_ITEM_CLICKED:
                 onLeftItemClicked();
                 break;
-            case CarousalConstants.EVENT_RIGHT_ITEM_CLICKED:
-                onRightItemClicked();
-                break;
             case CarousalConstants.EVENT_OTHER_REGION_CLICKED:
                 onOtherRegionClicked ();
                 break;
@@ -713,7 +675,6 @@ public class Carousal {
             largeIconPath = setUp.largeIcon;
             placeHolderImagePath = setUp.caraousalPlaceholder;
             leftItem = setUp.leftItem;
-            rightItem = setUp.rightItem;
             isOtherRegionClickable = setUp.isOtherRegionClickable;
             isImagesInCarousal = setUp.isImagesInCarousal;
 
@@ -739,10 +700,6 @@ public class Carousal {
         if (placeHolderImagePath != null) {
             caraousalPlaceholder = CarousalUtilities.carousalLoadImageFromStorage(placeHolderImagePath, CarousalConstants.CAROUSAL_PLACEHOLDER_ICON_FILE_NAME);
         }
-    }
-
-    private void onRightItemClicked() {
-        sendItemClickedBroadcast(rightItem);
     }
 
     private void onLeftItemClicked() {
@@ -796,20 +753,14 @@ public class Carousal {
 
         if (carousalItems != null && carousalItems.size() > currentStartIndex) {
 
-            switch (currentStartIndex) {
-
-                case 1:
-                    currentStartIndex = carousalItems.size() - 1;
-                    prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex), carousalItems.get(0));
-                    break;
-                case 0:
-                    currentStartIndex = carousalItems.size() - 2;
-                    prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex), carousalItems.get(currentStartIndex + 1));
-                    break;
-                default:
-                    currentStartIndex -= 2;
-                    prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex), carousalItems.get(currentStartIndex + 1));
-                    break;
+            if((currentStartIndex-1)>-1){
+                currentStartIndex = currentStartIndex-1;
+                prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex));
+            }
+            else
+            {
+                currentStartIndex = carousalItems.size()-1;
+                prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex));
             }
         }
     }
@@ -817,26 +768,15 @@ public class Carousal {
     private void onRightArrowClicked() {
         if (carousalItems != null && carousalItems.size() > currentStartIndex) {
 
-            int difference = carousalItems.size() - currentStartIndex;
-            switch (difference) {
-                case 3:
-                    currentStartIndex += 2;
-                    prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex), carousalItems.get(0));
-                    break;
-                case 2:
-                    currentStartIndex = 0;
-                    prepareVariablesForCarousalAndShow(carousalItems.get(0), carousalItems.get(1));
-                    break;
-                case 1:
-                    currentStartIndex = 1;
-                    prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex), carousalItems.get(currentStartIndex + 1));
-                    break;
-                default:
-                    currentStartIndex += 2;
-                    prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex), carousalItems.get(currentStartIndex + 1));
-                    break;
+            if((currentStartIndex+1)<carousalItems.size()){
+                currentStartIndex = currentStartIndex+1;
+                prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex));
+            }
+            else
+            {
+                currentStartIndex = 0;
+                prepareVariablesForCarousalAndShow(carousalItems.get(currentStartIndex));
             }
         }
     }
-
 }
