@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".CarousalItemClickReceiver">
+        <receiver android:name=".DemoCarousalItemClickReceiver">
             <intent-filter>
                 <action android:name="in.mamga.CAROUSALNOTIFICATIONITEMCLICKED" />
             </intent-filter>

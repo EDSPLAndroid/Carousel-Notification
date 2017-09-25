@@ -1,6 +1,5 @@
 package in.mamga.carousalnotificationmaster;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,13 +8,14 @@ import android.widget.Toast;
 
 import in.mamga.carousalnotification.Carousal;
 import in.mamga.carousalnotification.CarousalItem;
+import in.mamga.carousalnotification.CarousalItemClickReceiver;
 
 
 /**
  * Created by Shailesh on 08/01/17.
  */
 
-public class CarousalItemClickReceiver extends BroadcastReceiver {
+public class DemoCarousalItemClickReceiver extends CarousalItemClickReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -47,12 +47,13 @@ public class CarousalItemClickReceiver extends BroadcastReceiver {
                             photoIntent.putExtras(b1);
                             context.startActivity(photoIntent);
                             break;
+                        default:
+                            Toast.makeText(context, "Default clicked", Toast.LENGTH_LONG).show();
                     }
                 }
             } else {  //Meaning other region is clicked and isOtherRegionClick is set to true.
                 Toast.makeText(context, "Other region clicked", Toast.LENGTH_LONG).show();
             }
-
         }
     }
 }
