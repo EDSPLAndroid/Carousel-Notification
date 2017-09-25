@@ -27,5 +27,4 @@
         <activity android:name=".QuoteDetailActivity" />
         <activity android:name=".MarsImageActivity"></activity>
     </application>
-
 </manifest>

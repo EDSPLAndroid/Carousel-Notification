@@ -56,7 +56,7 @@ public class Carousal {
 
     public static final String CAROUSAL_ITEM_CLICKED_KEY = "CarousalNotificationItemClickedKey";
 
-    private Carousal(Context context) {
+    public Carousal(Context context) {
         this.context = context;
         mBuilder = new NotificationCompat.Builder(context);
     }
@@ -304,7 +304,7 @@ public class Carousal {
      * Here actual transaction starts
      * Set up will be saved here
      */
-    private void initiateCarousalTransaction() {
+    public void initiateCarousalTransaction() {
         currentStartIndex = 0;
         if (carousalItems != null && carousalItems.size() > 0) {
             if (carousalItems.size() == 1) {
@@ -323,7 +323,7 @@ public class Carousal {
      * @param leftItem
      *
      */
-    private void prepareVariablesForCarousalAndShow(CarousalItem leftItem) {
+    public void prepareVariablesForCarousalAndShow(CarousalItem leftItem) {
         if (this.leftItem == null) {
             this.leftItem = new CarousalItem();
         }
@@ -341,7 +341,7 @@ public class Carousal {
      * final function which displays carousal. Make sure carousalItems and pending intents are
      * set before calling this method. Otherwise noting will happen.
      */
-    private void showCarousal() {
+    public void showCarousal() {
 
         if (carousalItems != null && carousalItems.size() > 0) {
 
@@ -400,7 +400,7 @@ public class Carousal {
      * @param item
      * @return
      */
-    private Bitmap getCarousalBitmap(CarousalItem item) {
+    public Bitmap getCarousalBitmap(CarousalItem item) {
         Bitmap bitmap = null;
         if (item != null) {
             if (!TextUtils.isEmpty(item.getImage_file_name()) && !TextUtils.isEmpty(item.getImage_file_location())) {
@@ -425,7 +425,7 @@ public class Carousal {
      *
      * @param bigView
      */
-    private void setUpCarousalVisibilities(RemoteViews bigView) {
+    public void setUpCarousalVisibilities(RemoteViews bigView) {
         if (carousalItems.size() < 2) {
             bigView.setViewVisibility(R.id.ivArrowLeft, View.GONE);
             bigView.setViewVisibility(R.id.ivArrowRight, View.GONE);
@@ -466,7 +466,7 @@ public class Carousal {
      * Sets all titles/texts if they are null
      * They are set to app Icon if that is available. Otherwise at last are left as they are
      */
-    private void setUpCarousalTitles() {
+    public void setUpCarousalTitles() {
         if (TextUtils.isEmpty(contentTitle)) {
             setContentTitle(CarousalUtilities.carousalGetApplicationName(context));
         }
@@ -481,7 +481,7 @@ public class Carousal {
      * Sets all bitmaps if they are null
      * They are set to app Icon if that is available. Otherwise at last are left as they are
      */
-    private void setUpCarousalIcons() {
+    public void setUpCarousalIcons() {
         if (appIcon != null) {
             if (largeIcon == null) {
                 largeIcon = appIcon;
@@ -509,7 +509,7 @@ public class Carousal {
     /**
      * sets us carousal items into the view.
      */
-    private void setUpCarousalItems(RemoteViews bigView) {
+    public void setUpCarousalItems(RemoteViews bigView) {
         if (leftItemBitmap != null) {
             bigView.setImageViewBitmap(R.id.ivImageLeft, leftItemBitmap);
         }
@@ -524,7 +524,7 @@ public class Carousal {
     /**
      * creates pending intents for the clickable regions of the notification
      */
-    private void setPendingIntents(RemoteViews bigView) {
+    public void setPendingIntents(RemoteViews bigView) {
         //right arrow
         PendingIntent rightArrowPendingIntent = getPendingIntent(CarousalConstants.EVENT_RIGHT_ARROW_CLICKED);
         bigView.setOnClickPendingIntent(R.id.ivArrowRight, rightArrowPendingIntent);
@@ -542,7 +542,7 @@ public class Carousal {
      * @param eventClicked : integer id of the region clicked
      * @return pendingIntent for the same
      */
-    private PendingIntent getPendingIntent(int eventClicked) {
+    public PendingIntent getPendingIntent(int eventClicked) {
         Intent carousalIntent = new Intent(CarousalConstants.CAROUSAL_EVENT_FIRED_INTENT_FILTER);
         Bundle bundle = new Bundle();
         bundle.putInt(CarousalConstants.EVENT_CAROUSAL_ITEM_CLICKED_KEY, eventClicked);
@@ -558,7 +558,7 @@ public class Carousal {
      *
      * @return
      */
-    private CarousalSetUp saveCarousalSetUp() {
+    public CarousalSetUp saveCarousalSetUp() {
         setUpfilePathOfImages();
         CarousalSetUp cr = new CarousalSetUp(carousalItems, contentTitle, contentText,
                 bigContentTitle, bigContentText, carousalNotificationId,
@@ -570,7 +570,7 @@ public class Carousal {
     /**
      * If exists, it saves files into external directory and saves corresponding file path.
      */
-    private void setUpfilePathOfImages() {
+    public void setUpfilePathOfImages() {
         if (smallIcon != null) {
             smallIconPath = CarousalUtilities.carousalSaveBitmapToInternalStorage(context, smallIcon,
                     CarousalConstants.CAROUSAL_SMALL_ICON_FILE_NAME);
@@ -660,7 +660,7 @@ public class Carousal {
      *
      * @param setUp : {@link CarousalSetUp} object and carries the original set data.
      */
-    private void verifyAndSetUpVariables(CarousalSetUp setUp) {
+    public void verifyAndSetUpVariables(CarousalSetUp setUp) {
         //If it a new instance carousal stUp will be null
         if (carousalSetUp == null) {
             carousalItems = setUp.carousalItems;
@@ -690,7 +690,7 @@ public class Carousal {
     /**
      * If exists it loads bitmaps from file directory and saves them.
      */
-    private void setUpBitCarousalBitmapsFromSetUp() {
+    public void setUpBitCarousalBitmapsFromSetUp() {
         if (smallIconPath != null) {
             smallIcon = CarousalUtilities.carousalLoadImageFromStorage(smallIconPath, CarousalConstants.CAROUSAL_SMALL_ICON_FILE_NAME);
         }
@@ -702,7 +702,7 @@ public class Carousal {
         }
     }
 
-    private void onLeftItemClicked() {
+    public void onLeftItemClicked() {
         sendItemClickedBroadcast(leftItem);
 
     }
@@ -710,7 +710,7 @@ public class Carousal {
     /**
      * This is caused when any other region than carousal items is clicked.
      */
-    private void onOtherRegionClicked() {
+    public void onOtherRegionClicked() {
         if (isOtherRegionClickable) {
             //We will send the broadcast and finish the carousal
             Intent i = new Intent();
@@ -728,7 +728,7 @@ public class Carousal {
 
     }
 
-    private void sendItemClickedBroadcast(CarousalItem cItem) {
+    public void sendItemClickedBroadcast(CarousalItem cItem) {
         Intent i = new Intent();
         i.setAction(CarousalConstants.CAROUSAL_ITEM_CLICKED_INTENT_FILTER);
         Bundle bundle = new Bundle();
@@ -749,7 +749,7 @@ public class Carousal {
     /**
      * Here we choose the items for left and right an call prepareVariablesForCarousalAndShow() thereafter
      */
-    private void onLeftArrowClicked() {
+    public void onLeftArrowClicked() {
 
         if (carousalItems != null && carousalItems.size() > currentStartIndex) {
 
@@ -765,7 +765,7 @@ public class Carousal {
         }
     }
 
-    private void onRightArrowClicked() {
+    public void onRightArrowClicked() {
         if (carousalItems != null && carousalItems.size() > currentStartIndex) {
 
             if((currentStartIndex+1)<carousalItems.size()){
