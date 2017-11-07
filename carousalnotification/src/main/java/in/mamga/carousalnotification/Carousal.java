@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
@@ -369,7 +370,8 @@ public class Carousal {
                     new NotificationCompat.Builder(context);
             mBuilder.setContentTitle(contentTitle).setContentText(contentText)
                     .setSmallIcon(smallIconResourceId).setLargeIcon(largeIcon)
-                    .setPriority(notificationPriority);
+                    .setPriority(notificationPriority)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
             if (isOtherRegionClickable) {
                 Intent carousalIntent = new Intent(CarousalConstants.CAROUSAL_EVENT_FIRED_INTENT_FILTER);
